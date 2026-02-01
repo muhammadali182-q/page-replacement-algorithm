@@ -1,32 +1,99 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Page Replacement Visualizer</title>
-    <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Page Replacement Visualizer — Elegant Edition</title>
+    <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+    <main class="container" role="main">
+        <header class="top">
+            <h1>Page Replacement Visualizer</h1>
+            <p class="subtitle">FIFO · LRU · Optimal — animated, step-through, and clear metrics</p>
+        </header>
 
-<div class="container">
-    <h1>Page Replacement Algorithm Visualizer</h1>
+        <section class="controls" aria-label="Simulation controls">
+            <div class="row">
+                <label for="pages">Pages</label>
+                <input id="pages" type="text" placeholder="e.g. 7 0 1 2 0 3 0 4" />
+            </div>
 
-    <div class="inputs">
-        <input type="text" id="pages" placeholder="Enter pages e.g. 1 2 3 4 1 2 5">
-        <input type="number" id="frames" placeholder="Frames">
-        
-        <select id="algorithm">
-            <option value="fifo">FIFO</option>
-            <option value="lru">LRU</option>
-            <option value="optimal">Optimal</option>
-        </select>
+            <div class="row">
+                <label for="frames">Frames</label>
+                <input id="frames" type="number" min="1" value="3" />
+            </div>
 
-        <button onclick="simulate()">Simulate</button>
-    </div>
+            <div class="row">
+                <label for="algorithm">Algorithm</label>
+                <select id="algorithm" aria-label="Choose algorithm">
+                    <option value="fifo">FIFO</option>
+                    <option value="lru">LRU</option>
+                    <option value="optimal">Optimal</option>
+                </select>
+            </div>
 
-    <div id="output"></div>
-    <h2 id="faults"></h2>
-</div>
+            <div class="row actions">
+                <button id="simulateBtn" class="primary">Simulate</button>
+                <button id="stepBackBtn" title="Previous step">◀</button>
+                <button id="stepForwardBtn" title="Next step">▶</button>
+                <button id="playPauseBtn" title="Play / Pause">Play</button>
+                <button id="resetBtn" title="Reset">Reset</button>
+                <button id="clearBtn" title="Clear">Clear</button>
+            </div>
 
-<script src="script.js"></script>
+            <div class="row extras">
+                <label for="speed">Speed</label>
+                <input id="speed" type="range" min="200" max="1600" step="100" value="700" />
+                <span id="speedLabel">700ms</span>
+
+                <label for="preset">Example</label>
+                <select id="preset">
+                    <option value="">— select —</option>
+                    <option value="7 0 1 2 0 3 0 4|3">Classic (3 frames)</option>
+                    <option value="1 2 3 4 1 2 5|3">Simple (3 frames)</option>
+                    <option value="3 2 1 0 3 2 4 3|4">Variant (4 frames)</option>
+                </select>
+            </div>
+        </section>
+
+        <section class="visualization" aria-live="polite">
+            <div class="stats">
+                <div class="stat">
+                    <div class="stat-label">Total Steps</div>
+                    <div id="totalSteps" class="stat-value">0</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-label">Page Faults</div>
+                    <div id="faultsCount" class="stat-value">0</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-label">Hits</div>
+                    <div id="hitsCount" class="stat-value">0</div>
+                </div>
+            </div>
+
+            <div class="arena">
+                <div class="incoming">
+                    <div class="incoming-label">Incoming</div>
+                    <div id="incomingTile" class="tile hidden"></div>
+                </div>
+
+                <div class="frames" id="framesArea" aria-label="Frame slots">
+                    <!-- slots dynamically rendered -->
+                </div>
+            </div>
+
+            <div id="timeline" class="timeline" aria-label="Step timeline">
+                <!-- step cards -->
+            </div>
+        </section>
+
+        <footer class="credits">
+            <small>Refined UI — grey & white theme, smooth animations, step controls.</small>
+        </footer>
+    </main>
+
+    <script src="script.js"></script>
 </body>
 </html>
