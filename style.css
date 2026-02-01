@@ -1,67 +1,187 @@
-body {
-    font-family: Arial, sans-serif;
-    background: linear-gradient(135deg, #667eea, #764ba2);
-    color: white;
-    text-align: center;
-    margin: 0;
+:root{
+    --bg:#f3f4f6;
+    --panel:#ffffff;
+    --muted:#9aa3ad;
+    --accent:#22252a;
+    --success:#16a34a;
+    --danger:#dc2626;
+    --glass: rgba(255,255,255,0.6);
+    --shadow: 0 6px 18px rgba(23,23,23,0.08);
+    --radius:12px;
 }
 
-.container {
-    padding: 30px;
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+    margin:0;
+    font-family:Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    background: linear-gradient(180deg, #e9edf2 0%, var(--bg) 100%);
+    color: var(--accent);
+    -webkit-font-smoothing:antialiased;
+    -moz-osx-font-smoothing:grayscale;
+    padding:32px;
 }
 
-h1 {
-    margin-bottom: 20px;
+.container{
+    max-width:1100px;
+    margin:0 auto;
 }
 
-.inputs input, select, button {
-    padding: 10px;
-    margin: 5px;
-    font-size: 16px;
-    border-radius: 6px;
+.top h1{
+    margin:0;
+    font-size:22px;
+    letter-spacing:0.2px;
+}
+.top .subtitle{
+    margin:6px 0 20px 0;
+    color:var(--muted);
+    font-size:13px;
+}
+
+/* Controls */
+.controls{
+    display:grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap:12px;
+    align-items:end;
+    margin-bottom:20px;
+}
+
+.controls .row{
+    display:flex;
+    flex-direction:column;
+}
+
+.controls label{
+    font-size:12px;
+    color:var(--muted);
+    margin-bottom:6px;
+}
+
+.controls input[type="text"],
+.controls input[type="number"],
+.controls select{
+    padding:10px 12px;
+    border-radius:8px;
+    border:1px solid #e2e8f0;
+    background:var(--panel);
+    color:var(--accent);
+    box-shadow: var(--shadow);
+}
+
+.controls .actions{
+    display:flex;
+    gap:8px;
+    align-items:center;
+}
+
+button{
+    padding:10px 12px;
+    border-radius:10px;
     border: none;
+    background: transparent;
+    color:var(--accent);
+    cursor:pointer;
+    transition:transform .12s ease, box-shadow .12s ease;
+    box-shadow: none;
+    font-weight:600;
 }
 
-button {
-    background: #00ffcc;
-    font-weight: bold;
-    cursor: pointer;
+button:hover{ transform: translateY(-2px) }
+button:active{ transform: translateY(0) }
+
+button.primary{
+    background: linear-gradient(180deg,#fff 0%, #f8fafc 100%);
+    border:1px solid #e6edf3;
+    padding:10px 16px;
+    box-shadow: var(--shadow);
 }
 
-#output {
-    margin-top: 25px;
+/* Extras row spans full width */
+.controls .extras{
+    grid-column: 1 / -1;
+    display:flex;
+    gap:12px;
+    align-items:center;
 }
 
-.step {
-    background: rgba(255,255,255,0.15);
-    margin: 10px auto;
-    padding: 10px;
-    border-radius: 8px;
-    width: 80%;
+/* Visualization */
+.visualization{
+    background:var(--panel);
+    padding:18px;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
 }
 
-.frames {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-    margin-top: 8px;
+.stats{
+    display:flex;
+    gap:12px;
+    margin-bottom:12px;
 }
 
-.frame {
-    width: 45px;
-    height: 45px;
-    border: 2px solid white;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 18px;
-    border-radius: 6px;
+.stat{flex:1; padding:8px 10px; border-radius:8px; background:linear-gradient(180deg,#fbfdff,#f7f9fb)}
+.stat-label{font-size:12px; color:var(--muted)}
+.stat-value{font-size:18px; font-weight:700; margin-top:6px}
+
+/* Arena */
+.arena{display:flex; gap:18px; align-items:flex-start; margin-bottom:14px}
+
+.incoming{width:140px; text-align:center}
+.incoming-label{font-size:13px; color:var(--muted); margin-bottom:8px}
+.tile{
+    width:64px;height:64px;border-radius:10px;
+    display:inline-flex;align-items:center;justify-content:center;
+    font-weight:700;font-size:20px;color:#fff;
+    background:linear-gradient(180deg,#bcc3c8,#8f979d);
+    box-shadow: 0 8px 22px rgba(33,37,41,0.08);
+    transition:transform .35s ease, opacity .35s ease;
+}
+.tile.hidden{opacity:0;transform: translateY(-8px)}
+
+/* frames area */
+#framesArea{display:flex; gap:12px; align-items:center; flex:1; padding:8px; background:linear-gradient(180deg,#fbfdff,#f7f9fb); border-radius:10px}
+.slot{
+    width:84px; height:84px; border-radius:10px; background: linear-gradient(180deg,#ffffff,#f6f8f9);
+    border:1px dashed #e3e8ee; display:flex; align-items:center; justify-content:center; position:relative;
+    transition: transform .25s ease, box-shadow .25s ease, background .25s ease;
+    box-shadow: none;
+}
+.slot .value{ font-size:22px; font-weight:700; color:#1f2933; }
+.slot.placeholder{ color:var(--muted); font-weight:500; font-size:13px; }
+
+/* replaced animation */
+.slot.replaced{ animation: replacedPulse .8s ease forwards; }
+@keyframes replacedPulse { 0% {box-shadow:0 0 0 rgba(220,38,38,0.0)} 50% {box-shadow:0 12px 30px rgba(220,38,38,0.12); transform:translateY(-6px)} 100% {box-shadow:0 0 0 rgba(220,38,38,0)}}
+
+/* hit & fault highlight */
+.slot.hit{ box-shadow: 0 10px 26px rgba(16,185,129,0.08); transform: translateY(-6px); border:1px solid rgba(16,185,129,0.12) }
+.slot.fault{ box-shadow: 0 10px 26px rgba(220,38,38,0.06); transform: translateY(-6px); border:1px solid rgba(220,38,38,0.08) }
+
+/* tile drop animation (cloned tile that drops into slot) */
+.drop {
+    position: absolute;
+    z-index: 50;
+    width:64px;height:64px;border-radius:10px; display:flex;align-items:center;justify-content:center;
+    font-weight:700;font-size:20px;color:#fff; background:linear-gradient(180deg,#bcc3c8,#8f979d);
+    transition: transform 600ms cubic-bezier(.2,.9,.3,1), opacity .3s ease;
+    pointer-events:none;
 }
 
-.fault {
-    background: #ff4d4d;
+/* timeline */
+.timeline{ margin-top:12px; display:flex; gap:10px; flex-wrap:wrap }
+.stepCard{
+    background: #fff; border-radius:10px; padding:10px; min-width:180px; box-shadow: 0 8px 20px rgba(16,24,40,0.04);
+    display:flex; flex-direction:column; gap:8px; font-size:13px;
 }
+.stepRow{display:flex; justify-content:space-between; gap:8px; align-items:center}
+.badge{ padding:6px 8px; border-radius:6px; font-weight:700; font-size:12px; color:#fff}
+.badge.hit{ background:var(--success) }
+.badge.fault{ background:var(--danger) }
+.smallFrames{display:flex; gap:6px; align-items:center;}
 
-.hit {
-    background: #2ecc71;
+/* responsive */
+@media (max-width:900px){
+    .controls{grid-template-columns:repeat(2,1fr)}
+    .incoming{ display:none }
+    #framesArea{overflow:auto}
 }
